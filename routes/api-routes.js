@@ -58,5 +58,21 @@ router.put("/api/workout/:id", ({body,parms},res) =>{
     db.Workout.find({_id: id})
     .then(dbWorkout => {
         // console.log(dbWorkout);
+        savedExercises = dbWorkout[0].exercises;
+        res.json(savedExercises);
+        let allExcercises = [...savedExercises,body];
+        updateWorkout(allExcercises);
+        // console.log()
     })
-})
+    .catch(err => {
+        res.json(err);
+    });
+
+    function updateWorkout(exercises){
+        db.Workout.findByIdAndUpdate (id,{exercises: excercises},function(err,doc){
+            if(err){
+                console.logg(err)
+            }
+        })
+    }
+});
