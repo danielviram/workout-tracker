@@ -49,30 +49,35 @@ router.get("/api/workouts/:id", (req, res) => {
    
 });
 
-router.put("/api/workout/:id", ({body,parms},res) =>{
-    // console.log(body,parms)
+router.put("/api/workouts/:id", ({body, params}, res) => {
+    // console.log(body, params)
     const id = params.id;
     let savedExercises = [];
-    
-    // saves excercise in current workout 
+
+    // gets all the currently saved exercises in the current workout
     db.Workout.find({_id: id})
-    .then(dbWorkout => {
-        // console.log(dbWorkout);
-        savedExercises = dbWorkout[0].exercises;
-        res.json(savedExercises);
-        let allExcercises = [...savedExercises,body];
-        updateWorkout(allExcercises);
-        // console.log()
-    })
-    .catch(err => {
-        res.json(err);
-    });
+        .then(dbWorkout => {
+            // console.log(dbWorkout);
+            savedExercises = dbWorkout[0].exercises;
+            // console.log('savedExcercises', savedExercises);
+            // console.log('longway', dbWorkout[0].exercises);
+            res.json(savedExercises);
+            // console.log('body', body);
+            let allExercises = [...savedExercises, body];
+            // console.log('allExercises', allExercises);
+            updateWorkout(allExercises);
+        })
+        .catch(err => {
+            res.json(err);
+        });
 
     function updateWorkout(exercises){
-        db.Workout.findByIdAndUpdate (id,{exercises: excercises},function(err,doc){
-            if(err){
-                console.logg(err)
-            }
+        db.Workout.findByIdAndUpdate(id, {exercises: exercises}, function(err, doc){
+        if(err){
+            console.log(err)
+        }
         })
-    }
+    }        
 });
+
+module.exports = router;
